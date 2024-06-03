@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from app.models import SellerInfo
+from app.models import SellerInfo, User
 from app import db
 
 class SellerInfoResource(Resource):
@@ -52,5 +52,52 @@ class SellerInfoResource(Resource):
         db.session.commit()
         return {'message': 'Seller deleted successfully'}, 200
 
+class UserResource(Resource):
+    def get(self, user_id=None):
+        if user_id:
+            user = User.query.get_or_404(user_id)
+            return {
+                'user_id': user.user_id,
+                'username': user.username,
+                'email': user.email
+            }
+        else:
+            users = User.query.all()
+            return [{
+                'user_id': user.user_id,
+                'username': user.username,
+                'email': user.email
+            } for user in users]
+
+    def post(self):
+        data = request.get_json()
+        if User.query.filter_by(email=data['email']).first():
+            return {'message': 'A user with this email already exists'}, 400
+
+        new_user = User(
+            username=data['username'],
+            email=data['email'],
+            password=data['password']
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        return {'message': 'User created successfully'}, 201
+
+    def put(self, user_id):
+        user = User.query.get_or_404(user_id)
+        data = request.get_json()
+        user.username = data['username']
+        user.email = data['email']
+        user.password = data['password']
+        db.session.commit()
+        return {'message': 'User updated successfully'}, 200
+
+    def delete(self, user_id):
+        user = User.query.get_or_404(user_id)
+        db.session.delete(user)
+        db.session.commit()
+        return {'message': 'User deleted successfully'}, 200
+
 def initialize_routes(api):
     api.add_resource(SellerInfoResource, '/sellers', '/sellers/<int:seller_id>')
+    api.add_resource(UserResource, '/users', '/users/<int:user_id>')

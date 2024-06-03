@@ -16,3 +16,18 @@ curl -X PUT -H "Content-Type: application/json" -d '{"seller_name":"Jane Doe", "
 
 Delete a seller(Delete)
 curl -X DELETE http://127.0.0.1:5000/sellers/1
+
+Create a user
+curl -X POST -H "Content-Type: application/json" -d '{"username":"john", "email":"john@example.com", "password":"12345"}' http://127.0.0.1:5000/users
+
+Get all users
+curl http://127.0.0.1:5000/users
+
+Get a user by id
+curl http://127.0.0.1:5000/users/1
+
+Update a user (PUT):
+curl -X PUT -H "Content-Type: application/json" -d '{"username":"john_doe", "email":"john_doe@example.com", "password":"67890"}' http://127.0.0.1:5000/users/1
+
+Delete a user (DELETE):
+curl -X DELETE http://127.0.0.1:5000/users/1

@@ -1,0 +1,10 @@
+# Ignore database files
+*.db
+
+# Ignore Python bytecode files
+*.pyc
+
+# Ignore other file types as needed
+*.log
+*.tmp
+*.bak
